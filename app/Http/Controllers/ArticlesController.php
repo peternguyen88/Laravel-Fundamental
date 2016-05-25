@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Article;
-use Carbon\Carbon;
-use Request;
-
 use App\Http\Requests;
+use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
 {
     public function index(){
-        $articles = Article::orderBy('published_at', 'desc')->get();
+        $articles = Article::orderBy('published_at', 'desc')->published()->get();
         return view('articles.index', compact('articles'));
     }
 
@@ -24,10 +22,13 @@ class ArticlesController extends Controller
         return view('articles.create');
     }
 
-    public function store(){
-        $input = Request::all();
-        $input['published_at'] = Carbon::now();
-        Article::create($input);
+    public function store(Request $request){
+        $this->validate($request, ['title' => 'required|min:3', 'body' => 'required', 'published_at' => 'required|date']);
+        Article::create($request->all());
         return redirect('articles');
+    }
+
+    public function edit($id){
+        return view('articles.edit');
     }
 }
