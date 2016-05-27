@@ -1,5 +1,12 @@
-@extends('app)
+@extends('app')
 
 @section('content')
-    X
+    <h1>Edit: {!! $article->title !!}</h1>
+    <br/>
+
+    {!! Form::model($article, ['method' => 'PATCH','action' => ['ArticlesController@update', $article->id]]) !!}
+        @include('articles._form', ['submitButtonText' => 'Update Article'])
+    {!! Form::close() !!}
+
+    @include('errors.list')
 @stop
